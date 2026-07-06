@@ -76,7 +76,8 @@ header{
   padding:var(--space-3) var(--space-4);
   mix-blend-mode:difference;   /* 밝은/어두운 영상 위에서 로고 가독 */
 }
-.logo{font-family:var(--font-display);font-size:34px;line-height:.8;letter-spacing:.02em;color:#fff}
+.logo{display:inline-flex;align-items:center}
+.logo img{height:26px;width:auto;display:block}
 .nav-right{display:flex;align-items:center;gap:var(--space-3)}
 .nav-right a,.nav-right button{
   background:none;border:0;color:#fff;cursor:pointer;
@@ -232,7 +233,7 @@ footer .legal a:hover{color:var(--era-point)}
 
 <!-- ================= HEADER ================= -->
 <header>
-  <a href="#top" class="logo" aria-label="JISOO home">jisoo</a>
+  <a href="#top" class="logo" aria-label="JISOO home"><img src="assets/logo.svg" alt="JISOO" /></a>
   <nav class="nav-right" aria-label="Primary">
     <a href="#album" data-nav="shop">Shop</a>
     <button type="button" data-open="subscribe" data-nav="subscribe">Subscribe</button>
