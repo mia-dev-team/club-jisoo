@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="en" data-era="club-jisoo" data-lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>JISOO | Official Website</title>
+<meta name="description" content="JISOO official website" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<style>
+/* ============================================================
+   확장형 디자인 시스템 (Extensible Design System)
+   3계층 토큰 구조 — 앨범/뮤비 발매마다 히어로 룩앤필을 통째로 교체
+   ------------------------------------------------------------
+   1) GLOBAL 토큰   : 앨범 무관 공통값 (간격/타이포/라운드/모션) — 리뉴얼 1회
+   2) ERA 테마 토큰 : 배경/폰트/포인트컬러/히어로카피/모션 — 앨범마다 교체
+   3) 컴포넌트      : 위 토큰을 "참조만" 하고 값을 직접 갖지 않음 (고정/재사용)
+
+   >> 새 앨범 era 추가법:
+      아래 [data-era="새이름"] 블록을 하나 복제해 값만 바꾸고,
+      <html data-era="새이름"> 로 지정하면 사이트 전체 룩앤필이 교체됨.
+   ============================================================ */
+
+/* ---------- 1) GLOBAL 토큰 (앨범 무관 공통) ---------- */
+:root{
+  --space-1:8px;  --space-2:16px; --space-3:24px; --space-4:40px;
+  --space-5:64px; --space-6:96px; --space-7:140px;
+  --maxw:1440px;
+  --radius-s:2px; --radius-m:6px;
+  --type-nav:13px; --type-body:15px; --type-h2:clamp(28px,4vw,52px);
+  --font-ui:"Archivo",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  --font-display:"Anton",Impact,sans-serif;
+  --motion-fast:.25s; --motion-med:.5s; --motion-slow:.9s;
+  --ease:cubic-bezier(.22,.61,.36,1);
+  --marquee-duration:28s;   /* era에서 덮어씀 */
+}
+
+/* ---------- 2) ERA 테마 토큰 : CLUB JISOO (Summer 2026) ---------- */
+[data-era="club-jisoo"]{
+  --era-bg:#000000;
+  --era-fg:#ffffff;
+  --era-point:#ff2e88;             /* 네온 핑크 */
+  --era-point-2:#ff7bc4;
+  --era-glow:0 0 14px rgba(255,46,136,.65);
+  --era-hero-src:"assets/hero-desktop.mp4";
+  --era-hero-src-mobile:"assets/hero-mobile.mp4";
+  --era-hero-poster:"assets/hero-poster.jpg";
+  --era-marquee-word:"CLUB JISOO";
+  --era-album-title:"CLUB JISOO";
+  --marquee-duration:26s;
+}
+/* 예시) 다음 앨범 era 템플릿 (주석 해제 후 값만 교체)
+[data-era="next-album"]{
+  --era-bg:#0a0f2c; --era-fg:#eef; --era-point:#7cf;
+  --era-marquee-word:"NEXT ERA"; --era-album-title:"NEXT ERA";
+}
+*/
+
+/* ---------- 3) 컴포넌트 (토큰 참조만) ---------- */
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--era-bg);color:var(--era-fg);font-family:var(--font-ui)}
+body{overflow-x:hidden;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+img{max-width:100%;display:block}
+.uppercase{text-transform:uppercase;letter-spacing:.09em}
+
+/* skip link */
+.skip{position:absolute;left:-999px;top:0;background:#fff;color:#000;padding:8px 14px;z-index:200}
+.skip:focus{left:8px;top:8px}
+
+/* ---------- Header ---------- */
+header{
+  position:fixed;inset:0 0 auto 0;z-index:50;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:var(--space-3) var(--space-4);
+  mix-blend-mode:difference;   /* 밝은/어두운 영상 위에서 로고 가독 */
+}
+.logo{font-family:var(--font-display);font-size:34px;line-height:.8;letter-spacing:.02em;color:#fff}
+.nav-right{display:flex;align-items:center;gap:var(--space-3)}
+.nav-right a,.nav-right button{
+  background:none;border:0;color:#fff;cursor:pointer;
+  font-family:var(--font-ui);font-size:var(--type-nav);font-weight:600;
+  text-transform:uppercase;letter-spacing:.14em;
+  transition:opacity var(--motion-fast) var(--ease);
+}
+.nav-right a:hover,.nav-right button:hover{opacity:.55}
+.lang-toggle{display:flex;gap:2px;align-items:center;mix-blend-mode:normal}
+.lang-toggle button{opacity:.5}
+.lang-toggle button[aria-pressed="true"]{opacity:1;text-decoration:underline;text-underline-offset:4px}
+.lang-sep{opacity:.4}
+
+/* ---------- Hero ---------- */
+.hero{position:relative;height:100svh;min-height:640px;width:100%;overflow:hidden}
+.hero video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center}
+.hero .scrim{position:absolute;inset:0;background:
+  linear-gradient(180deg,rgba(0,0,0,.35),transparent 22%,transparent 55%,rgba(0,0,0,.65));
+  z-index:1}
+.hero-copy{
+  position:absolute;left:var(--space-4);bottom:calc(var(--space-4) + 10px);z-index:3;
+  max-width:60vw;
+}
+.hero-copy .kicker{font-size:13px;letter-spacing:.24em;opacity:.85;margin-bottom:10px}
+.hero-copy h1{
+  font-family:var(--font-display);font-weight:400;line-height:.9;
+  font-size:clamp(44px,8vw,120px);
+  color:var(--era-point);text-shadow:var(--era-glow);
+}
+
+/* Hero 좌측 소셜 아이콘 (Apple Music / Spotify / YouTube / Instagram) */
+.hero-social{position:absolute;right:var(--space-4);top:50%;transform:translateY(-50%);z-index:3;
+  display:flex;flex-direction:column;gap:var(--space-2)}
+.hero-social a{width:26px;height:26px;opacity:.9;transition:transform var(--motion-fast) var(--ease),color var(--motion-fast)}
+.hero-social a:hover{transform:scale(1.18);color:var(--era-point)}
+.hero-social svg{width:100%;height:100%;fill:currentColor}
+
+/* Hero 우측하단 링크 그리드 (LISTEN / SHOP / WATCH / CONNECT) */
+.hero-grid{position:absolute;right:var(--space-4);bottom:var(--space-4);z-index:3;
+  display:grid;grid-template-columns:1fr 1fr;border:1px solid rgba(255,255,255,.5)}
+.hero-grid a{
+  padding:16px 22px;min-width:150px;
+  border:.5px solid rgba(255,255,255,.3);
+  font-size:var(--type-nav);font-weight:600;text-transform:uppercase;letter-spacing:.12em;
+  display:flex;align-items:center;justify-content:center;text-align:center;
+  transition:background var(--motion-fast) var(--ease),color var(--motion-fast);
+}
+.hero-grid a:hover{background:var(--era-point);color:#000}
+
+/* ---------- Album / Merch 섹션 ---------- */
+.album{position:relative;padding:var(--space-6) 0 var(--space-7);background:var(--era-bg);overflow:hidden}
+.marquee{white-space:nowrap;overflow:hidden;user-select:none;margin-bottom:var(--space-5)}
+.marquee .track{display:inline-block;will-change:transform;animation:scroll var(--marquee-duration) linear infinite}
+.marquee span{font-family:var(--font-display);font-size:clamp(70px,13vw,190px);line-height:.9;
+  padding-right:.4em;color:var(--era-fg)}
+.marquee span:nth-child(even){-webkit-text-stroke:2px var(--era-fg);color:transparent}
+@keyframes scroll{to{transform:translateX(-50%)}}
+
+.album-row{max-width:var(--maxw);margin:0 auto;padding:0 var(--space-4);
+  display:flex;align-items:center;justify-content:center;gap:var(--space-4);margin-bottom:var(--space-6)}
+.album-row .title{font-family:var(--font-display);font-size:clamp(30px,5vw,64px)}
+.crosshair{width:44px;height:44px;position:relative;flex:0 0 auto}
+.crosshair::before,.crosshair::after{content:"";position:absolute;background:var(--era-fg)}
+.crosshair::before{left:50%;top:0;width:1px;height:100%;transform:translateX(-50%)}
+.crosshair::after{top:50%;left:0;height:1px;width:100%;transform:translateY(-50%)}
+.btn-outline{border:1.5px solid var(--era-fg);padding:16px 34px;font-weight:700;
+  text-transform:uppercase;letter-spacing:.12em;font-size:15px;cursor:pointer;background:none;color:var(--era-fg);
+  transition:background var(--motion-fast) var(--ease),color var(--motion-fast)}
+.btn-outline:hover{background:var(--era-fg);color:var(--era-bg)}
+.btn-outline.point:hover{background:var(--era-point);border-color:var(--era-point);color:#000}
+
+/* corner-bracket 프레임 + 앨범 카드 2종 */
+.album-frame{position:relative;max-width:960px;margin:0 auto var(--space-6);padding:var(--space-5) var(--space-4)}
+.album-frame .corner{position:absolute;width:28px;height:28px;border:1.5px solid var(--era-fg)}
+.album-frame .c-tl{top:0;left:0;border-right:0;border-bottom:0}
+.album-frame .c-tr{top:0;right:0;border-left:0;border-bottom:0}
+.album-frame .c-bl{bottom:0;left:0;border-right:0;border-top:0}
+.album-frame .c-br{bottom:0;right:0;border-left:0;border-top:0}
+.cards{display:flex;gap:var(--space-5);justify-content:center;flex-wrap:wrap}
+.card{width:300px;transition:transform var(--motion-med) var(--ease)}
+.card:hover{transform:translateY(-8px)}
+.card img{aspect-ratio:1;object-fit:cover;border:1px solid rgba(255,255,255,.15)}
+.card .cap{margin-top:12px;text-align:center;font-size:12px;letter-spacing:.16em;opacity:.7;text-transform:uppercase}
+
+/* SHOP: 미정(워너/비비디) → 두 스토어 버튼 모두 노출 */
+.shop-choice{display:flex;gap:var(--space-2);justify-content:center;flex-wrap:wrap;align-items:center}
+.shop-note{width:100%;text-align:center;font-size:11px;letter-spacing:.12em;opacity:.45;
+  text-transform:uppercase;margin-bottom:var(--space-2)}
+
+/* ---------- Footer ---------- */
+footer{border-top:1px solid rgba(255,255,255,.14);padding:var(--space-4);text-align:center}
+footer .legal{font-size:12px;letter-spacing:.06em;opacity:.6;line-height:1.9}
+footer .legal a:hover{color:var(--era-point)}
+
+/* ---------- Modal (공통) ---------- */
+.modal{position:fixed;inset:0;z-index:100;display:none;align-items:center;justify-content:center;padding:20px}
+.modal.open{display:flex}
+.modal .backdrop{position:absolute;inset:0;background:rgba(0,0,0,.82);backdrop-filter:blur(6px)}
+.modal .panel{position:relative;z-index:1;width:100%;max-width:460px;max-height:88vh;overflow:auto;
+  background:#0b0b0b;border:1px solid rgba(255,255,255,.18);padding:var(--space-4)}
+.modal .panel h2{font-family:var(--font-display);font-weight:400;font-size:32px;margin-bottom:6px;color:var(--era-point);text-shadow:var(--era-glow)}
+.modal .panel .sub{font-size:12.5px;opacity:.6;margin-bottom:var(--space-3);letter-spacing:.04em}
+.modal .close{position:absolute;top:14px;right:16px;font-size:22px;background:none;border:0;color:#fff;cursor:pointer;line-height:1}
+
+/* Listen hub */
+.region-bar{display:flex;align-items:center;gap:10px;margin-bottom:var(--space-3);
+  font-size:12px;letter-spacing:.06em}
+.region-bar select{background:#000;color:#fff;border:1px solid rgba(255,255,255,.3);padding:7px 10px;font-family:var(--font-ui);font-size:12px}
+.plat{display:flex;align-items:center;justify-content:space-between;gap:10px;
+  border:1px solid rgba(255,255,255,.16);padding:14px 16px;margin-bottom:10px;
+  text-transform:uppercase;letter-spacing:.1em;font-size:13px;font-weight:600;
+  transition:border-color var(--motion-fast),background var(--motion-fast)}
+.plat:hover{border-color:var(--era-point);background:rgba(255,46,136,.08)}
+.plat.primary{border-color:var(--era-point);box-shadow:var(--era-glow)}
+.plat .tag{font-size:9px;letter-spacing:.14em;color:#000;background:var(--era-point);padding:3px 7px;border-radius:2px}
+.plat .arrow{opacity:.5}
+.plat-group-label{font-size:10px;letter-spacing:.18em;opacity:.4;text-transform:uppercase;margin:var(--space-2) 0 10px}
+.confirm-flag{font-size:10px;letter-spacing:.08em;color:#ffcf4d;opacity:.85;margin-left:6px}
+
+/* Subscribe form */
+.field{margin-bottom:var(--space-2)}
+.field label{display:block;font-size:11px;letter-spacing:.14em;text-transform:uppercase;opacity:.6;margin-bottom:7px}
+.field input,.field select{width:100%;background:#000;border:1px solid rgba(255,255,255,.25);color:#fff;
+  padding:12px 12px;font-family:var(--font-ui);font-size:14px}
+.field input:focus,.field select:focus{outline:none;border-color:var(--era-point)}
+.field-row{display:flex;gap:10px}
+.field-row>*{flex:1}
+.submit{width:100%;margin-top:var(--space-2);background:var(--era-point);color:#000;border:0;
+  padding:14px;font-weight:800;text-transform:uppercase;letter-spacing:.14em;font-size:14px;cursor:pointer}
+.submit:hover{filter:brightness(1.08)}
+.form-ok{display:none;text-align:center;padding:var(--space-3) 0;font-size:14px;letter-spacing:.05em}
+
+/* ---------- 반응형 ---------- */
+@media (max-width:760px){
+  header{padding:var(--space-2) var(--space-3)}
+  .logo{font-size:26px}
+  .nav-right{gap:var(--space-2)}
+  .hero-social{top:auto;bottom:120px;transform:none}
+  .hero-grid{left:var(--space-3);right:var(--space-3);bottom:var(--space-3);grid-template-columns:1fr 1fr}
+  .hero-grid a{min-width:0;padding:13px 8px}
+  .hero-copy{left:var(--space-3);bottom:200px;max-width:80vw}
+  .album-row{flex-direction:column;gap:var(--space-2)}
+  .field-row{flex-direction:column}
+}
+@media (prefers-reduced-motion:reduce){
+  .marquee .track{animation:none}
+  *{scroll-behavior:auto}
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to main content</a>
+
+<!-- ================= HEADER ================= -->
+<header>
+  <a href="#top" class="logo" aria-label="JISOO home">jisoo</a>
+  <nav class="nav-right" aria-label="Primary">
+    <a href="#album" data-nav="shop">Shop</a>
+    <button type="button" data-open="subscribe" data-nav="subscribe">Subscribe</button>
+    <span class="lang-toggle" role="group" aria-label="Language">
+      <button type="button" data-lang-set="en" aria-pressed="true">EN</button>
+      <span class="lang-sep">/</span>
+      <button type="button" data-lang-set="ko" aria-pressed="false">KO</button>
+    </span>
+  </nav>
+</header>
+
+<main id="main">
+<span id="top"></span>
+
+<!-- ================= HERO ================= -->
+<section class="hero" id="hero">
+  <video autoplay loop muted playsinline poster="assets/hero-poster.jpg" id="heroVideo">
+    <source src="assets/hero-desktop.mp4" type="video/mp4" media="(min-width:761px)" />
+    <source src="assets/hero-mobile.mp4" type="video/mp4" />
+  </video>
+  <div class="scrim"></div>
+
+  <div class="hero-copy">
+    <div class="kicker uppercase" data-nav="welcome">Welcome to</div>
+    <h1>CLUB JISOO</h1>
+  </div>
+
+  <!-- 소셜 플랫폼 아이콘: Apple Music / Spotify / YouTube / Instagram -->
+  <div class="hero-social" aria-label="Social platforms">
+    <a href="https://music.apple.com/artist/jisoo" target="_blank" rel="noopener" aria-label="Apple Music">
+      <svg viewBox="0 0 24 24"><path d="M23.1 6.2c0-.7 0-1.4-.2-2.1a3.9 3.9 0 0 0-1.8-2.4C20.4 1.3 19.6 1.2 18.8 1.1c-.3 0-.6 0-.9 0H6.1c-.3 0-.6 0-.9 0-.8.1-1.6.2-2.3.6A3.9 3.9 0 0 0 1.1 4.1C.9 4.8.9 5.5.9 6.2v11.6c0 .7 0 1.4.2 2.1a3.9 3.9 0 0 0 1.8 2.4c.7.4 1.5.5 2.3.6h12.7c.8-.1 1.6-.2 2.3-.6a3.9 3.9 0 0 0 1.8-2.4c.2-.7.2-1.4.2-2.1V6.2zM17.3 9.9v6.4c0 .5-.1 1-.5 1.4-.4.4-.9.5-1.4.6-.3 0-.6 0-.8-.1-.9-.3-1.3-1.3-1-2.2.2-.6.7-.9 1.3-1 .3-.1.7-.1 1-.2.2 0 .3-.1.3-.4V9.2c0-.3-.1-.4-.4-.3l-4.6 1c-.2 0-.3.2-.3.4v6.4c0 .5-.1 1-.5 1.4-.4.4-.9.5-1.4.6-.3 0-.6 0-.8-.1-.9-.3-1.3-1.3-1-2.2.2-.6.7-.9 1.3-1 .3-.1.6-.1 1-.2.2 0 .3-.1.3-.4V7.9c0-.5.2-.7.7-.8l5.6-1.2c.4-.1.6.1.6.5v3.5z"/></svg>
+    </a>
+    <a href="https://open.spotify.com/artist/jisoo" target="_blank" rel="noopener" aria-label="Spotify">
+      <svg viewBox="0 0 24 24"><path d="M12 0a12 12 0 1 0 0 24 12 12 0 0 0 0-24zm5.5 17.3a.75.75 0 0 1-1 .25c-2.8-1.7-6.3-2.1-10.4-1.1a.75.75 0 1 1-.3-1.45c4.5-1 8.4-.6 11.5 1.3.35.2.45.7.2 1.05zm1.5-3.3a.94.94 0 0 1-1.3.3c-3.2-2-8-2.5-11.8-1.4a.94.94 0 1 1-.5-1.8c4.3-1.3 9.7-.7 13.3 1.6.45.3.6.9.3 1.3zm.13-3.4C15.8 8.2 8.9 8 5.3 9.1a1.12 1.12 0 1 1-.65-2.15C8.8 5.7 16.4 5.9 20.6 8.4a1.12 1.12 0 1 1-1.17 1.9z"/></svg>
+    </a>
+    <a href="https://youtube.com/@sooyaaa__" target="_blank" rel="noopener" aria-label="YouTube">
+      <svg viewBox="0 0 24 24"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 0 0 .5 6.2 31 31 0 0 0 0 12a31 31 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 0 0 2.1-2.1A31 31 0 0 0 24 12a31 31 0 0 0-.5-5.8zM9.6 15.6V8.4l6.2 3.6-6.2 3.6z"/></svg>
+    </a>
+    <a href="https://instagram.com/sooyaaa__" target="_blank" rel="noopener" aria-label="Instagram">
+      <svg viewBox="0 0 24 24"><path d="M12 2.2c3.2 0 3.6 0 4.9.07 1.17.05 1.8.25 2.23.42.56.22.96.48 1.38.9.42.42.68.82.9 1.38.17.42.37 1.06.42 2.23.06 1.27.07 1.65.07 4.86s0 3.6-.07 4.86c-.05 1.17-.25 1.8-.42 2.23-.22.56-.48.96-.9 1.38-.42.42-.82.68-1.38.9-.42.17-1.06.37-2.23.42-1.27.06-1.65.07-4.86.07s-3.6 0-4.86-.07c-1.17-.05-1.8-.25-2.23-.42a3.7 3.7 0 0 1-1.38-.9 3.7 3.7 0 0 1-.9-1.38c-.17-.42-.37-1.06-.42-2.23C2.2 15.6 2.2 15.2 2.2 12s0-3.6.07-4.86c.05-1.17.25-1.8.42-2.23.22-.56.48-.96.9-1.38.42-.42.82-.68 1.38-.9.42-.17 1.06-.37 2.23-.42C8.4 2.2 8.8 2.2 12 2.2zm0 3.05A6.75 6.75 0 1 0 12 18.75 6.75 6.75 0 0 0 12 5.25zm0 11.13A4.38 4.38 0 1 1 12 7.6a4.38 4.38 0 0 1 0 8.76zm6.9-11.4a1.58 1.58 0 1 1-3.15 0 1.58 1.58 0 0 1 3.15 0z"/></svg>
+    </a>
+  </div>
+
+  <!-- 히어로 우측하단 링크 그리드 (기존 구조 유지) -->
+  <nav class="hero-grid" aria-label="Quick links">
+    <a href="#" data-open="listen" data-nav="listen">Listen Now</a>
+    <a href="#" data-open="watch" data-nav="watch">Watch Video</a>
+    <a href="#album" data-nav="shop">Shop</a>
+    <a href="#" data-open="subscribe" data-nav="connect">Stay Connected</a>
+  </nav>
+</section>
+
+<!-- ================= ALBUM / MERCH ================= -->
+<section class="album" id="album">
+  <div class="marquee" aria-hidden="true">
+    <div class="track" id="marqueeTrack"></div>
+  </div>
+
+  <div class="album-row">
+    <span class="title" id="albumTitle">CLUB JISOO</span>
+    <span class="crosshair" aria-hidden="true"></span>
+    <button class="btn-outline point" data-open="shop" data-nav="order">Order Now</button>
+  </div>
+
+  <div class="album-frame">
+    <span class="corner c-tl"></span><span class="corner c-tr"></span>
+    <span class="corner c-bl"></span><span class="corner c-br"></span>
+    <div class="cards">
+      <figure class="card">
+        <img src="assets/era-card-1.jpg" alt="CLUB JISOO — cover A" />
+        <figcaption class="cap">CLUB JISOO · Ver. A</figcaption>
+      </figure>
+      <figure class="card">
+        <img src="assets/era-card-2.jpg" alt="CLUB JISOO — cover B" />
+        <figcaption class="cap">CLUB JISOO · Ver. B</figcaption>
+      </figure>
+    </div>
+  </div>
+
+  <!-- SHOP: 판매 스토어 미정(워너 vs 비비디) → 두 옵션 모두 노출 -->
+  <div class="shop-choice">
+    <div class="shop-note" data-nav="shopnote">Shop — store TBD (both options shown)</div>
+    <a class="btn-outline" href="https://jisoo.lnk.to/shop" target="_blank" rel="noopener" data-nav="shopwarner">Shop · Warner Store</a>
+    <a class="btn-outline" href="https://bibidi.myshopify.com" target="_blank" rel="noopener" data-nav="shopbibidi">Shop · Bibidi Store</a>
+  </div>
+</section>
+</main>
+
+<!-- ================= FOOTER ================= -->
+<footer>
+  <div class="legal">
+    &copy; 2026 BLISSOO&nbsp;&nbsp;
+    <a href="https://www.warnerrecords.com/privacy-policy" target="_blank" rel="noopener">Privacy Policy</a> |
+    <a href="https://www.warnerrecords.com/terms-of-use" target="_blank" rel="noopener">Terms of Use</a> |
+    <a href="#" target="_blank" rel="noopener">Cookies Policy</a>
+  </div>
+</footer>
+
+<!-- ================= LISTEN NOW · REGION 링크허브 ================= -->
+<div class="modal" id="modal-listen" role="dialog" aria-modal="true" aria-labelledby="listen-h">
+  <div class="backdrop" data-close></div>
+  <div class="panel">
+    <button class="close" data-close aria-label="Close">&times;</button>
+    <h2 id="listen-h">Listen Now</h2>
+    <p class="sub" data-nav="listensub">Auto-routed by your region. Change anytime.</p>
+    <div class="region-bar">
+      <span data-nav="region">Region</span>
+      <select id="regionSelect" aria-label="Region"></select>
+    </div>
+    <div id="platformList"></div>
+  </div>
+</div>
+
+<!-- ================= WATCH VIDEO ================= -->
+<div class="modal" id="modal-watch" role="dialog" aria-modal="true" aria-labelledby="watch-h">
+  <div class="backdrop" data-close></div>
+  <div class="panel" style="max-width:760px">
+    <button class="close" data-close aria-label="Close">&times;</button>
+    <h2 id="watch-h">Watch Video</h2>
+    <p class="sub" data-nav="watchsub">Latest music video — CLUB JISOO</p>
+    <div style="position:relative;aspect-ratio:16/9;background:#000">
+      <iframe id="watchFrame" style="position:absolute;inset:0;width:100%;height:100%;border:0"
+        title="Latest music video" allow="autoplay; encrypted-media; fullscreen" allowfullscreen src="about:blank"></iframe>
+    </div>
+  </div>
+</div>
+
+<!-- ================= SHOP (Order Now) : 워너/비비디 미정 → 둘 다 ================= -->
+<div class="modal" id="modal-shop" role="dialog" aria-modal="true" aria-labelledby="shop-h">
+  <div class="backdrop" data-close></div>
+  <div class="panel">
+    <button class="close" data-close aria-label="Close">&times;</button>
+    <h2 id="shop-h">Order Now</h2>
+    <p class="sub" data-nav="shopmodalsub">Sales store TBD — Warner &amp; Bibidi both shown</p>
+    <a class="plat" href="https://jisoo.lnk.to/shop" target="_blank" rel="noopener">
+      <span>Warner Shopify Store</span><span class="arrow">&rarr;</span></a>
+    <a class="plat" href="https://bibidi.myshopify.com" target="_blank" rel="noopener">
+      <span>Bibidi Shopify Store</span><span class="arrow">&rarr;</span></a>
+  </div>
+</div>
+
+<!-- ================= SUBSCRIBE (CRM) ================= -->
+<div class="modal" id="modal-subscribe" role="dialog" aria-modal="true" aria-labelledby="sub-h">
+  <div class="backdrop" data-close></div>
+  <div class="panel">
+    <button class="close" data-close aria-label="Close">&times;</button>
+    <h2 id="sub-h">Subscribe</h2>
+    <p class="sub" data-nav="subsub">Get first access to new album drops.</p>
+    <form id="subForm">
+      <div class="field">
+        <label data-nav="f-email">Email Address</label>
+        <input type="email" name="email" required placeholder="you@email.com" />
+      </div>
+      <div class="field">
+        <label data-nav="f-name">Name</label>
+        <input type="text" name="name" placeholder="Name" />
+      </div>
+      <div class="field">
+        <label data-nav="f-region">Region</label>
+        <select name="region" id="subRegion"></select>
+      </div>
+      <div class="field">
+        <label data-nav="f-bday">Birthday</label>
+        <div class="field-row">
+          <select name="bmonth" id="bmonth" aria-label="Month"></select>
+          <select name="bday" id="bday" aria-label="Day"></select>
+        </div>
+      </div>
+      <button type="submit" class="submit" data-nav="f-submit">Subscribe</button>
+    </form>
+    <div class="form-ok" id="subOk" data-nav="f-ok">Thanks — you are on the list.</div>
+  </div>
+</div>
+
+<script>
+/* =========================================================
+   데이터: Region 링크허브 (요구사항 §2 표 기준)
+   *실제 lnk.to 링크는 워너 사이트 참조 필요 → 현재 placeholder
+   ========================================================= */
+const REGIONS = {
+  KR: {label:"Korea (한국)", primary:"Melon",
+    others:["Genie","YouTube Music","Spotify"]},
+  US: {label:"United States", primary:"Spotify",
+    others:["Apple Music","Amazon Music"]},
+  CA: {label:"Canada", primary:"Spotify",
+    others:["Apple Music","Amazon Music"]},
+  GB: {label:"United Kingdom", primary:"Spotify",
+    others:["Apple Music","Deezer"]},
+  EU: {label:"Europe", primary:"Spotify",
+    others:["Apple Music","Deezer"]},
+  JP: {label:"Japan (日本)", primary:"Apple Music",
+    others:["Spotify","LINE MUSIC"]},
+  CN: {label:"China (中国)", primary:"QQ Music", confirm:true,
+    others:["NetEase Cloud","Kugou"]},
+  TW: {label:"Taiwan / Hong Kong", primary:"KKBOX", confirm:true,
+    others:["Spotify","Apple Music"]},
+  DEFAULT: {label:"Global", primary:"Spotify",
+    others:["Apple Music","YouTube Music"]}
+};
+// 실제 링크 매핑 (placeholder — 워너 링크 확정 시 교체)
+const PLATFORM_LINK = p => "https://jisoo.lnk.to/ClubJisoo/" + p.toLowerCase().replace(/\s+/g,"");
+
+// country_code → REGIONS 키
+const EU_SET = new Set(["DE","FR","ES","IT","NL","SE","NO","FI","DK","PL","IE","PT","AT","BE","CH","CZ","GR","HU","RO"]);
+function mapRegion(cc){
+  if(!cc) return "DEFAULT";
+  cc=cc.toUpperCase();
+  if(REGIONS[cc]) return cc;
+  if(cc==="HK") return "TW";
+  if(EU_SET.has(cc)) return "EU";
+  return "DEFAULT";
+}
+
+/* ---- Region 자동 감지 (IP 기반, 실패 시 타임존/언어 폴백) ---- */
+async function detectRegion(){
+  try{
+    const ctrl = new AbortController();
+    const t=setTimeout(()=>ctrl.abort(),2500);
+    const r = await fetch("https://ipapi.co/json/",{signal:ctrl.signal});
+    clearTimeout(t);
+    if(r.ok){const j=await r.json(); if(j && j.country_code) return mapRegion(j.country_code);}
+  }catch(e){/* 폴백 */}
+  // 폴백: 타임존/언어
+  try{
+    const tz=Intl.DateTimeFormat().resolvedOptions().timeZone||"";
+    if(tz.includes("Seoul")) return "KR";
+    if(tz.includes("Tokyo")) return "JP";
+    if(tz.includes("Shanghai")||tz.includes("Chongqing")) return "CN";
+    if(tz.includes("Taipei")||tz.includes("Hong_Kong")) return "TW";
+    if(tz.includes("London")) return "GB";
+    if(tz.startsWith("Europe/")) return "EU";
+    if(tz.startsWith("America/")) return "US";
+  }catch(e){}
+  const lang=(navigator.language||"en").toLowerCase();
+  if(lang.startsWith("ko")) return "KR";
+  if(lang.startsWith("ja")) return "JP";
+  if(lang.startsWith("zh")) return "CN";
+  return "DEFAULT";
+}
+
+function renderPlatforms(key){
+  const R=REGIONS[key]||REGIONS.DEFAULT;
+  const list=document.getElementById("platformList");
+  const flag=R.confirm?' <span class="confirm-flag">확인필요</span>':'';
+  let html = `<a class="plat primary" href="${PLATFORM_LINK(R.primary)}" target="_blank" rel="noopener">
+      <span>${R.primary}${flag}</span><span class="tag">${T().primary}</span></a>`;
+  html += `<div class="plat-group-label">${T().more}</div>`;
+  R.others.forEach(p=>{
+    html += `<a class="plat" href="${PLATFORM_LINK(p)}" target="_blank" rel="noopener">
+      <span>${p}</span><span class="arrow">&rarr;</span></a>`;
+  });
+  list.innerHTML=html;
+}
+
+/* ================= i18n (Global: EN 기본 + KO) ================= */
+const I18N = {
+  en:{ shop:"Shop", subscribe:"Subscribe", welcome:"Welcome to",
+    listen:"Listen Now", watch:"Watch Video", connect:"Stay Connected",
+    order:"Order Now", shopnote:"Shop — store TBD (both options shown)",
+    shopwarner:"Shop · Warner Store", shopbibidi:"Shop · Bibidi Store",
+    listensub:"Auto-routed by your region. Change anytime.", region:"Region",
+    watchsub:"Latest music video — CLUB JISOO",
+    shopmodalsub:"Sales store TBD — Warner & Bibidi both shown",
+    subsub:"Get first access to new album drops.",
+    "f-email":"Email Address","f-name":"Name","f-region":"Region","f-bday":"Birthday",
+    "f-submit":"Subscribe","f-ok":"Thanks — you are on the list.",
+    primary:"1ST", more:"More platforms" },
+  ko:{ shop:"샵", subscribe:"구독", welcome:"WELCOME TO",
+    listen:"음원 듣기", watch:"영상 보기", connect:"소식 받기",
+    order:"주문하기", shopnote:"샵 — 판매처 미정 (두 옵션 모두 표시)",
+    shopwarner:"샵 · 워너 스토어", shopbibidi:"샵 · 비비디 스토어",
+    listensub:"접속 지역 기준 자동 안내 · 지역 변경 가능", region:"지역",
+    watchsub:"최신 뮤직비디오 — CLUB JISOO",
+    shopmodalsub:"판매처 미정 — 워너/비비디 모두 표시",
+    subsub:"신규 앨범 발매 소식을 가장 먼저 받아보세요.",
+    "f-email":"이메일","f-name":"이름","f-region":"지역","f-bday":"생일",
+    "f-submit":"구독하기","f-ok":"감사합니다 — 구독이 완료되었습니다.",
+    primary:"1순위", more:"다른 플랫폼" }
+};
+let LANG="en";
+const T = ()=>I18N[LANG];
+function applyLang(l){
+  LANG=l; document.documentElement.setAttribute("data-lang",l);
+  document.documentElement.setAttribute("lang",l);
+  document.querySelectorAll("[data-nav]").forEach(el=>{
+    const k=el.getAttribute("data-nav"); if(T()[k]!=null) el.textContent=T()[k];
+  });
+  document.querySelectorAll("[data-lang-set]").forEach(b=>
+    b.setAttribute("aria-pressed", b.getAttribute("data-lang-set")===l));
+  // 현재 지역 플랫폼 리스트 라벨도 갱신
+  if(currentRegion) renderPlatforms(currentRegion);
+}
+
+/* ================= 모달 제어 ================= */
+function openModal(id){document.getElementById("modal-"+id).classList.add("open");document.body.style.overflow="hidden";
+  if(id==="watch"){const f=document.getElementById("watchFrame");
+    if(f.src==="about:blank") f.src="https://www.youtube.com/embed/?listType=user_uploads&list=sooyaaa__&rel=0";}}
+function closeModals(){document.querySelectorAll(".modal.open").forEach(m=>m.classList.remove("open"));
+  document.body.style.overflow="";
+  const f=document.getElementById("watchFrame"); if(f) f.src="about:blank";}
+document.querySelectorAll("[data-open]").forEach(b=>b.addEventListener("click",e=>{e.preventDefault();openModal(b.getAttribute("data-open"));}));
+document.querySelectorAll("[data-close]").forEach(b=>b.addEventListener("click",closeModals));
+document.addEventListener("keydown",e=>{if(e.key==="Escape")closeModals();});
+document.querySelectorAll("[data-lang-set]").forEach(b=>b.addEventListener("click",()=>applyLang(b.getAttribute("data-lang-set"))));
+
+/* ================= 마퀴 텍스트 (era 토큰의 앨범명 반복) ================= */
+(function(){
+  const word = getComputedStyle(document.documentElement).getPropertyValue("--era-marquee-word").replace(/["']/g,"").trim() || "CLUB JISOO";
+  const track=document.getElementById("marqueeTrack");
+  let html=""; for(let i=0;i<10;i++){html+=`<span>${word}</span>`;}
+  track.innerHTML=html+html; // 이음새 없는 루프용 2배
+})();
+
+/* ================= Subscribe 폼: 지역/생일 옵션 ================= */
+(function(){
+  const regSelects=[document.getElementById("regionSelect"),document.getElementById("subRegion")];
+  const opts=Object.keys(REGIONS).filter(k=>k!=="DEFAULT")
+    .map(k=>`<option value="${k}">${REGIONS[k].label}</option>`).join("")+
+    `<option value="DEFAULT">${REGIONS.DEFAULT.label}</option>`;
+  regSelects.forEach(s=>{if(s) s.innerHTML=opts;});
+  const bm=document.getElementById("bmonth"),bd=document.getElementById("bday");
+  const months=["01","02","03","04","05","06","07","08","09","10","11","12"];
+  bm.innerHTML='<option value="">Month</option>'+months.map(m=>`<option>${m}</option>`).join("");
+  let days='<option value="">Day</option>'; for(let d=1;d<=31;d++){days+=`<option>${String(d).padStart(2,"0")}</option>`;}
+  bd.innerHTML=days;
+  document.getElementById("subForm").addEventListener("submit",e=>{
+    e.preventDefault();
+    e.target.style.display="none";
+    document.getElementById("subOk").style.display="block";
+    // 실제 CRM 연동 지점 (Email / Region / Name / Birthday) — 추후 API 연결
+  });
+})();
+
+/* ================= 초기화: 지역 감지 → 링크허브 채우기 ================= */
+let currentRegion=null;
+const regionSelect=document.getElementById("regionSelect");
+regionSelect.addEventListener("change",()=>{currentRegion=regionSelect.value;renderPlatforms(currentRegion);});
+(async function init(){
+  applyLang("en");
+  currentRegion = await detectRegion();
+  regionSelect.value = REGIONS[currentRegion]?currentRegion:"DEFAULT";
+  renderPlatforms(currentRegion);
+})();
+</script>
+</body>
+</html>
