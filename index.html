@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-era="club-jisoo" data-lang="en">
+<html lang="en" data-era="amortage" data-lang="en">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -36,24 +36,25 @@
   --marquee-duration:28s;   /* era에서 덮어씀 */
 }
 
-/* ---------- 2) ERA 테마 토큰 : CLUB JISOO (Summer 2026) ---------- */
-[data-era="club-jisoo"]{
-  --era-bg:#000000;
-  --era-fg:#ffffff;
-  --era-point:#ff2e88;             /* 네온 핑크 */
-  --era-point-2:#ff7bc4;
-  --era-glow:0 0 14px rgba(255,46,136,.65);
+/* ---------- 2) ERA 테마 토큰 : AMORTAGE (earthquake, 2025) ---------- */
+[data-era="amortage"]{
+  --era-bg:#0a0d0e;                /* 쿨 톤 딥 블랙 */
+  --era-fg:#eef1f2;                /* 쿨 화이트 */
+  --era-point:#7cc6dc;             /* 아이시 블루 (earthquake) */
+  --era-point-2:#b6a6d4;           /* 실버 라일락 */
+  --era-glow:0 0 14px rgba(124,198,220,.6);
   --era-hero-src:"assets/hero-desktop.mp4";
   --era-hero-src-mobile:"assets/hero-mobile.mp4";
   --era-hero-poster:"assets/hero-poster.jpg";
-  --era-marquee-word:"CLUB JISOO";
-  --era-album-title:"CLUB JISOO";
-  --marquee-duration:26s;
+  --era-marquee-word:"AMORTAGE";
+  --era-album-title:"AMORTAGE";
+  --marquee-duration:32s;          /* 무드감 있게 느리게 */
 }
-/* 예시) 다음 앨범 era 템플릿 (주석 해제 후 값만 교체)
-[data-era="next-album"]{
-  --era-bg:#0a0f2c; --era-fg:#eef; --era-point:#7cf;
-  --era-marquee-word:"NEXT ERA"; --era-album-title:"NEXT ERA";
+/* 이전 era: CLUB JISOO (Summer 2026) — 재사용 시 주석 해제
+[data-era="club-jisoo"]{
+  --era-bg:#000; --era-fg:#fff; --era-point:#ff2e88; --era-point-2:#ff7bc4;
+  --era-glow:0 0 14px rgba(255,46,136,.65);
+  --era-marquee-word:"CLUB JISOO"; --era-album-title:"CLUB JISOO"; --marquee-duration:26s;
 }
 */
 
@@ -190,7 +191,7 @@ footer .legal a:hover{color:var(--era-point)}
   border:1px solid rgba(255,255,255,.16);padding:14px 16px;margin-bottom:10px;
   text-transform:uppercase;letter-spacing:.1em;font-size:13px;font-weight:600;
   transition:border-color var(--motion-fast),background var(--motion-fast)}
-.plat:hover{border-color:var(--era-point);background:rgba(255,46,136,.08)}
+.plat:hover{border-color:var(--era-point);background:rgba(124,198,220,.08)}
 .plat.primary{border-color:var(--era-point);box-shadow:var(--era-glow)}
 .plat .tag{font-size:9px;letter-spacing:.14em;color:#000;background:var(--era-point);padding:3px 7px;border-radius:2px}
 .plat .arrow{opacity:.5}
@@ -257,8 +258,8 @@ footer .legal a:hover{color:var(--era-point)}
   <div class="scrim"></div>
 
   <div class="hero-copy">
-    <div class="kicker uppercase" data-nav="welcome">Welcome to</div>
-    <h1>CLUB JISOO</h1>
+    <div class="kicker uppercase" data-nav="welcome">The 1st Mini Album</div>
+    <h1>AMORTAGE</h1>
   </div>
 
   <!-- 소셜 플랫폼 아이콘: Apple Music / Spotify / YouTube / Instagram -->
@@ -293,7 +294,7 @@ footer .legal a:hover{color:var(--era-point)}
   </div>
 
   <div class="album-row">
-    <span class="title" id="albumTitle">CLUB JISOO</span>
+    <span class="title" id="albumTitle">AMORTAGE</span>
     <span class="crosshair" aria-hidden="true"></span>
     <button class="btn-outline point" data-open="shop" data-nav="order">Order Now</button>
   </div>
@@ -303,12 +304,12 @@ footer .legal a:hover{color:var(--era-point)}
     <span class="corner c-bl"></span><span class="corner c-br"></span>
     <div class="cards">
       <figure class="card">
-        <img src="assets/era-card-1.jpg" alt="CLUB JISOO — cover A" />
-        <figcaption class="cap">CLUB JISOO · Ver. A</figcaption>
+        <img src="assets/era-card-1.jpg" alt="AMORTAGE — cover A" />
+        <figcaption class="cap">AMORTAGE · Ver. A</figcaption>
       </figure>
       <figure class="card">
-        <img src="assets/era-card-2.jpg" alt="CLUB JISOO — cover B" />
-        <figcaption class="cap">CLUB JISOO · Ver. B</figcaption>
+        <img src="assets/era-card-2.jpg" alt="AMORTAGE — cover B" />
+        <figcaption class="cap">AMORTAGE · Ver. B</figcaption>
       </figure>
     </div>
   </div>
@@ -353,7 +354,7 @@ footer .legal a:hover{color:var(--era-point)}
   <div class="panel" style="max-width:760px">
     <button class="close" data-close aria-label="Close">&times;</button>
     <h2 id="watch-h">Watch Video</h2>
-    <p class="sub" data-nav="watchsub">Latest music video — CLUB JISOO</p>
+    <p class="sub" data-nav="watchsub">Music video — earthquake</p>
     <div style="position:relative;aspect-ratio:16/9;background:#000">
       <iframe id="watchFrame" style="position:absolute;inset:0;width:100%;height:100%;border:0"
         title="Latest music video" allow="autoplay; encrypted-media; fullscreen" allowfullscreen src="about:blank"></iframe>
@@ -434,7 +435,7 @@ const REGIONS = {
     others:["Apple Music","YouTube Music"]}
 };
 // 실제 링크 매핑 (placeholder — 워너 링크 확정 시 교체)
-const PLATFORM_LINK = p => "https://jisoo.lnk.to/ClubJisoo/" + p.toLowerCase().replace(/\s+/g,"");
+const PLATFORM_LINK = p => "https://jisoo.lnk.to/Amortage/" + p.toLowerCase().replace(/\s+/g,"");
 
 // country_code → REGIONS 키
 const EU_SET = new Set(["DE","FR","ES","IT","NL","SE","NO","FI","DK","PL","IE","PT","AT","BE","CH","CZ","GR","HU","RO"]);
@@ -490,23 +491,23 @@ function renderPlatforms(key){
 
 /* ================= i18n (Global: EN 기본 + KO) ================= */
 const I18N = {
-  en:{ shop:"Shop", subscribe:"Subscribe", welcome:"Welcome to",
+  en:{ shop:"Shop", subscribe:"Subscribe", welcome:"The 1st Mini Album",
     listen:"Listen Now", watch:"Watch Video", connect:"Stay Connected",
     order:"Order Now", shopnote:"Shop — store TBD (both options shown)",
     shopwarner:"Shop · Warner Store", shopbibidi:"Shop · Bibidi Store",
     listensub:"Auto-routed by your region. Change anytime.", region:"Region",
-    watchsub:"Latest music video — CLUB JISOO",
+    watchsub:"Music video — earthquake",
     shopmodalsub:"Sales store TBD — Warner & Bibidi both shown",
     subsub:"Get first access to new album drops.",
     "f-email":"Email Address","f-name":"Name","f-region":"Region","f-bday":"Birthday",
     "f-submit":"Subscribe","f-ok":"Thanks — you are on the list.",
     primary:"1ST", more:"More platforms" },
-  ko:{ shop:"샵", subscribe:"구독", welcome:"WELCOME TO",
+  ko:{ shop:"샵", subscribe:"구독", welcome:"첫 미니 앨범",
     listen:"음원 듣기", watch:"영상 보기", connect:"소식 받기",
     order:"주문하기", shopnote:"샵 — 판매처 미정 (두 옵션 모두 표시)",
     shopwarner:"샵 · 워너 스토어", shopbibidi:"샵 · 비비디 스토어",
     listensub:"접속 지역 기준 자동 안내 · 지역 변경 가능", region:"지역",
-    watchsub:"최신 뮤직비디오 — CLUB JISOO",
+    watchsub:"뮤직비디오 — earthquake",
     shopmodalsub:"판매처 미정 — 워너/비비디 모두 표시",
     subsub:"신규 앨범 발매 소식을 가장 먼저 받아보세요.",
     "f-email":"이메일","f-name":"이름","f-region":"지역","f-bday":"생일",
@@ -541,7 +542,7 @@ document.querySelectorAll("[data-lang-set]").forEach(b=>b.addEventListener("clic
 
 /* ================= 마퀴 텍스트 (era 토큰의 앨범명 반복) ================= */
 (function(){
-  const word = getComputedStyle(document.documentElement).getPropertyValue("--era-marquee-word").replace(/["']/g,"").trim() || "CLUB JISOO";
+  const word = getComputedStyle(document.documentElement).getPropertyValue("--era-marquee-word").replace(/["']/g,"").trim() || "AMORTAGE";
   const track=document.getElementById("marqueeTrack");
   let html=""; for(let i=0;i<10;i++){html+=`<span>${word}</span>`;}
   track.innerHTML=html+html; // 이음새 없는 루프용 2배
